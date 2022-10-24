@@ -6,24 +6,23 @@ import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 
 import styles from './Sort.module.scss';
+import { Row } from '../Table';
 
 interface SortProps {
   store?: {};
   updateStore?: (val) => void;
 }
 
-// OR
-
-//interface SortProps {
-//  selected?: {};
-//  updateSelected?: (val) => void;
-//}
-
-// OR store can be global
-
-export const Sort: FC<SortProps> = props => {
+export const Sort: FC<SortProps> = ({ store, updateStore }: SortProps) => {
   const handleChange = value => {
-    console.log(value); // for debugging
+    if (!store || !updateStore) return;
+
+    updateStore(
+      [...(store as Row[])].sort((a, b) => {
+        if (value === 'asc') return a.lastPayments - b.lastPayments;
+        return b.lastPayments - a.lastPayments;
+      })
+    );
   };
 
   return (
