@@ -4,27 +4,31 @@ import InputAdornment from '@mui/material/InputAdornment';
 import SearchIcon from '@mui/icons-material/Search';
 
 import styles from './Search.module.scss';
+import { Row } from '../Table';
 
 interface SearchProps {
   store?: {};
   updateStore?: (val) => void;
 }
 
-// OR
-
-//interface SearchProps {
-//  selected?: {};
-//  updateSelected?: (val) => void;
-//}
-
-// OR store can be global
-
-export const Search: FC<SearchProps> = props => {
+export const Search: FC<SearchProps> = ({
+  store,
+  updateStore,
+}: SearchProps) => {
   const [searchedValue, setSearchedValue] = useState('');
 
   const onChange = value => {
-    console.log(value); // for debugging
     setSearchedValue(value);
+
+    if (!value.trim().length) updateStore(store);
+    updateStore(
+      [...(store as Row[])].filter(
+        s =>
+          s.username.toLocaleLowerCase().includes(value.toLocaleLowerCase()) ||
+          s.country.toLocaleLowerCase().includes(value.toLocaleLowerCase()) ||
+          s.name.toLocaleLowerCase().includes(value.toLocaleLowerCase())
+      )
+    );
   };
 
   return (
